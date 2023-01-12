@@ -1,32 +1,31 @@
 <template>
   <ul>
-    <li v-for="(todoItem, index) in todoItems" :key="index">
+    <li
+      v-for="(todoItem, index) in propsdata"
+      :key="index"
+      @click="toggleTodo(todoItem)"
+    >
       {{ todoItem }}
-      <span class="removeBtn" type="button" @click="removeTodo(todoItem, index)"
-        >삭제</span
+      <span
+        class="removeBtn"
+        type="button"
+        @click="removeTodo(todoItem, index)"
       >
+        삭제
+      </span>
     </li>
   </ul>
 </template>
 
 <script lang="ts">
 export default {
-  data() {
-    return {
-      todoItems: [],
-    };
-  },
-  created() {
-    if (localStorage.length > 0) {
-      for (var i = 0; i < localStorage.length; i++) {
-        this.todoItems.push(localStorage.key(i));
-      }
-    }
-  },
+  props: ["propsdata"],
   methods: {
-    removeTodo(todoItem: [string], index: number) {
-      localStorage.removeItem(todoItem);
-      this.todoItems.splice(index, 1);
+    toggleTodo(todoItem: string) {
+      this.$emit("toggleTodo", todoItem);
+    },
+    removeTodo(todoItem: string, index: number) {
+      this.$emit("removeTodo", todoItem, index); // App의 removeTodo 함수 호출
     },
   },
 };

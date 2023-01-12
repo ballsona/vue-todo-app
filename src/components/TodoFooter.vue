@@ -1,12 +1,12 @@
 <template>
-  <div class="clearAllBtn" @click="clearTodo">Clear All</div>
+  <div class="clearAllBtn" @click="removeAll">Clear All</div>
 </template>
 
 <script lang="ts">
 export default {
   methods: {
-    clearTodo() {
-      localStorage.clear();
+    removeAll() {
+      this.$emit("removeAll");
     },
   },
 };
@@ -16,5 +16,6 @@ export default {
 .clearAllBtn {
   color: #cb3939;
   display: black;
+  cursor: pointer;
 }
 </style>
