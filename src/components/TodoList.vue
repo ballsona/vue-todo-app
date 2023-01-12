@@ -1,11 +1,12 @@
 <template>
   <ul>
-    <li
-      v-for="(todoItem, index) in propsdata"
-      :key="index"
-      @click="toggleTodo(todoItem)"
-    >
-      {{ todoItem }}
+    <li v-for="(todoItem, index) in propsdata" :key="index">
+      <span
+        :class="{ doneTodo: todoItem.completed }"
+        @click="toggleTodo(todoItem, index)"
+      >
+        {{ todoItem.item }}
+      </span>
       <span
         class="removeBtn"
         type="button"
@@ -18,14 +19,16 @@
 </template>
 
 <script lang="ts">
+import type { TodoItem } from "@/App.vue";
+
 export default {
   props: ["propsdata"],
   methods: {
-    toggleTodo(todoItem: string) {
-      this.$emit("toggleTodo", todoItem);
+    toggleTodo(todoItem: TodoItem, index: number) {
+      this.$emit("toggleTodoItem", todoItem, index); // App의 toggleTodoItem 함수 호출
     },
     removeTodo(todoItem: string, index: number) {
-      this.$emit("removeTodo", todoItem, index); // App의 removeTodo 함수 호출
+      this.$emit("removeTodoItem", todoItem, index); // App의 removeTodoItem 함수 호출
     },
   },
 };
@@ -51,11 +54,15 @@ li {
   margin: 5px 0px;
   padding: 0px 7px;
   border-radius: 3px;
+  cursor: pointer;
 }
 .removeBtn {
   margin-left: auto;
   color: rgb(195, 80, 80);
   font-size: 12px;
   cursor: pointer;
+}
+.doneTodo {
+  text-decoration: line-through;
 }
 </style>

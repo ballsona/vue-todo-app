@@ -1,11 +1,11 @@
 <template>
   <div id="app">
     <TodoHeader></TodoHeader>
-    <TodoInput @addTodo="addTodo"></TodoInput>
+    <TodoInput @addTodoItem="addTodoItem"></TodoInput>
     <TodoList
-      v-bind:propsdata="todoItems"
-      @removeTodo="removeTodo"
-      @toggleTodo="toggleTodo"
+      :propsdata="todoItems"
+      @removeTodoItem="removeTodoItem"
+      @toggleTodoItem="toggleTodoItem"
     ></TodoList>
     <TodoFooter @removeAll="removeAll"></TodoFooter>
   </div>
@@ -17,6 +17,11 @@ import TodoFooter from "./components/TodoFooter.vue";
 import TodoInput from "./components/TodoInput.vue";
 import TodoList from "./components/TodoList.vue";
 
+export interface TodoItem {
+  completed: boolean;
+  item: string;
+}
+
 export default {
   components: {
     TodoHeader: TodoHeader,
@@ -26,30 +31,43 @@ export default {
   },
   data() {
     return {
-      todoItems: [] as Array<string | null>,
+      todoItems: [] as Array<TodoItem>,
     };
   },
   created() {
     if (localStorage.length > 0) {
       for (var i = 0; i < localStorage.length; i++) {
-        this.todoItems.push(localStorage.key(i));
+        this.todoItems.push(
+          JSON.parse(localStorage.getItem(localStorage.key(i)))
+        );
       }
     }
   },
   methods: {
-    addTodo(value: string) {
+    // todo를 추가하는 함수
+    addTodoItem(value: string) {
+      console.log(value);
       if (value) {
-        localStorage.setItem(value, value);
-        this.todoItems.push(value);
+        const newTodoObj = { completed: false, item: value };
+        localStorage.setItem(value, JSON.stringify(newTodoObj));
+        this.todoItems.push(newTodoObj);
+        console.log(newTodoObj);
       }
     },
-    toggleTodo(todoItem: string) {
-      console.log(todoItem);
+    // todo 완료 여부를 체크하는 함수
+    toggleTodoItem(todoItem: TodoItem, index: number) {
+      this.todoItems[index].completed = !this.todoItems[index].completed;
+      // localStorage 데이터를 업데이트
+      localStorage.removeItem(todoItem.item);
+      localStorage.setItem(todoItem.item, JSON.stringify(todoItem));
+      console.log(this.todoItems);
     },
-    removeTodo(todoItem: string, index: number) {
-      localStorage.removeItem(todoItem);
+    // todo 삭제하는 함수
+    removeTodoItem(todoItem: TodoItem, index: number) {
+      localStorage.removeItem(todoItem.item);
       this.todoItems.splice(index, 1);
     },
+    // 모든 todo를 삭제하는 함수
     removeAll() {
       localStorage.clear();
       this.todoItems = [];

@@ -2,10 +2,10 @@
   <input
     type="text"
     v-model="newTodoItem"
-    v-on:keyup.enter="addTodo"
+    @keyup.enter="addTodo"
     placeholder="add what you have to do"
   />
-  <button v-on:click="addTodo">추가</button>
+  <button @click="addTodo">추가</button>
 </template>
 
 <script lang="ts">
@@ -16,12 +16,14 @@ export default {
     };
   },
   methods: {
+    // todo를 새로 추가하는 함수
     addTodo() {
       if (this.newTodoItem) {
-        this.$emit("addTodo", this.newTodoItem);
+        this.$emit("addTodoItem", this.newTodoItem); // 부모 컴포넌트(App) 의 addTodo 함수 호출
         this.clearInput();
       }
     },
+    // input value 제거하는 함수
     clearInput() {
       this.newTodoItem = "";
     },
