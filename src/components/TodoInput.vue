@@ -1,11 +1,15 @@
 <template>
-  <input
-    type="text"
-    v-model="newTodoItem"
-    @keyup.enter="addTodo"
-    placeholder="add what you have to do"
-  />
-  <button @click="addTodo">추가</button>
+  <div class="inputBox">
+    <input
+      type="text"
+      v-model="newTodoItem"
+      @keyup.enter="addTodo"
+      placeholder="add what you have to do"
+    />
+    <span class="addBtnBox" @click="addTodo">
+      <i class="addBtn fa fa-plus" aria-hidden="true"></i>
+    </span>
+  </div>
 </template>
 
 <script lang="ts">
@@ -23,7 +27,7 @@ export default {
         this.clearInput();
       }
     },
-    // input value 제거하는 함수
+    // Input값을 초기화하는 함수
     clearInput() {
       this.newTodoItem = "";
     },
@@ -33,16 +37,20 @@ export default {
 
 <style>
 input {
-  width: 250px;
+  width: 300px;
   height: 35px;
-  background: #fff;
   border: none;
-  border-radius: 5px;
+  border-bottom: 1.5px solid #fff;
+  background: transparent;
+  color: #fff;
+  font-size: 1em;
   padding-left: 10px;
   margin-right: 10px;
-  font-size: 1em;
 }
 input:focus {
   outline: none;
+}
+.addBtn {
+  color: #fff;
 }
 </style>

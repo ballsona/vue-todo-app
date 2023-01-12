@@ -8,9 +8,12 @@ export default {};
 
 <style scoped>
 h1 {
-  color: #3c3c3c;
   font-weight: 800;
-  font-size: 40px;
+  font-size: 50px;
   margin-top: 2em;
+  background: -webkit-linear-gradient(315deg, #42d392 25%, #647eff);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 </style>

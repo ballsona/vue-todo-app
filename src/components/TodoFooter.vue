@@ -14,8 +14,9 @@ export default {
 
 <style>
 .clearAllBtn {
-  color: #cb3939;
-  display: black;
+  color: rgb(214, 94, 94);
+  font-weight: 500;
+  font-size: 1em;
   cursor: pointer;
 }
 </style>

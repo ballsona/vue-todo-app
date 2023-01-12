@@ -1,18 +1,21 @@
 <template>
   <ul>
     <li v-for="(todoItem, index) in propsdata" :key="index">
-      <span
+      <div
         :class="{ doneTodo: todoItem.completed }"
         @click="toggleTodo(todoItem, index)"
       >
+        <span class="checkIcon">
+          <i class="fa fa-check" aria-hidden="true"></i>
+        </span>
         {{ todoItem.item }}
-      </span>
+      </div>
       <span
         class="removeBtn"
         type="button"
         @click="removeTodo(todoItem, index)"
       >
-        삭제
+        <i class="fa fa-trash-o" aria-hidden="true"></i>
       </span>
     </li>
   </ul>
@@ -39,7 +42,6 @@ ul {
   list-style-type: none;
   padding-left: 0;
   margin-top: 0;
-  text-align: left;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -47,22 +49,27 @@ ul {
 }
 li {
   width: 350px;
-  height: 35px;
-  line-height: 35px;
+  height: 45px;
+  line-height: 45px;
   display: flex;
+  justify-content: space-between;
   background-color: #fff;
-  margin: 5px 0px;
+  margin: 7px 0px;
   padding: 0px 7px;
-  border-radius: 3px;
+  border-radius: 2px;
   cursor: pointer;
 }
+.checkIcon {
+  margin: 0px 7px;
+  color: #42b883;
+}
 .removeBtn {
-  margin-left: auto;
-  color: rgb(195, 80, 80);
-  font-size: 12px;
+  margin-right: 7px;
+  color: rgb(214, 94, 94);
   cursor: pointer;
 }
 .doneTodo {
   text-decoration: line-through;
+  color: rgb(130, 130, 130);
 }
 </style>

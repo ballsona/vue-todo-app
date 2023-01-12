@@ -76,6 +76,6 @@ export default {
 <style>
 body {
   text-align: center;
-  background-color: #e6e6e6;
+  background-color: #242424;
 }
 </style>
