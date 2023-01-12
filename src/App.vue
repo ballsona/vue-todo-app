@@ -46,12 +46,10 @@ export default {
   methods: {
     // todo를 추가하는 함수
     addTodoItem(value: string) {
-      console.log(value);
       if (value) {
         const newTodoObj = { completed: false, item: value };
         localStorage.setItem(value, JSON.stringify(newTodoObj));
         this.todoItems.push(newTodoObj);
-        console.log(newTodoObj);
       }
     },
     // todo 완료 여부를 체크하는 함수
@@ -60,7 +58,6 @@ export default {
       // localStorage 데이터를 업데이트
       localStorage.removeItem(todoItem.item);
       localStorage.setItem(todoItem.item, JSON.stringify(todoItem));
-      console.log(this.todoItems);
     },
     // todo 삭제하는 함수
     removeTodoItem(todoItem: TodoItem, index: number) {
