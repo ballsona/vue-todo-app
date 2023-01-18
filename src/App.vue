@@ -1,73 +1,91 @@
 <template>
-  <div id="app">
-    <TodoHeader></TodoHeader>
-    <TodoInput @addTodoItem="addTodoItem"></TodoInput>
-    <TodoList
-      :propsdata="todoItems"
-      @removeTodoItem="removeTodoItem"
-      @toggleTodoItem="toggleTodoItem"
-    ></TodoList>
-    <TodoFooter @removeAll="removeAll"></TodoFooter>
-  </div>
+  <HeaderWrapper />
+  <MainWrapper
+    :todoList="todoList"
+    @addTodoItem="addTodoItem"
+    @toggleTodoItem="toggleTodoItem"
+    @removeTodoItem="removeTodoItem"
+    @resetTodoList="resetTodoList"
+  />
 </template>
 
 <script lang="ts">
-import TodoHeader from "./components/TodoHeader.vue";
-import TodoFooter from "./components/TodoFooter.vue";
-import TodoInput from "./components/TodoInput.vue";
-import TodoList from "./components/TodoList.vue";
+import JSConfetti from "js-confetti";
+import HeaderWrapper from "./components/HeaderWrapper.vue";
+import MainWrapper from "./components/MainWrapper.vue";
+import type { TodoItemType } from "./components/TodoItem.vue";
+import { saveData, getData } from "./utils/storage";
 
-export interface TodoItem {
-  completed: boolean;
-  item: string;
-}
+const TODO_STORAGE_KEY = "vue-todo-list";
+
+const jsConfetti = new JSConfetti();
+
+//export interface TodoItemType {
+//  id: number;
+//  todo: string;
+//  completed: boolean;
+//}
 
 export default {
   components: {
-    TodoHeader: TodoHeader,
-    TodoFooter: TodoFooter,
-    TodoInput: TodoInput,
-    TodoList: TodoList,
+    HeaderWrapper: HeaderWrapper,
+    MainWrapper: MainWrapper,
   },
   data() {
     return {
-      todoItems: [] as Array<TodoItem>,
+      todoList: [] as TodoItemType[],
     };
   },
   created() {
-    if (localStorage.length > 0) {
-      for (var i = 0; i < localStorage.length; i++) {
-        this.todoItems.push(
-          JSON.parse(localStorage.getItem(localStorage.key(i)))
-        );
-      }
+    const storageData = getData(TODO_STORAGE_KEY);
+    if (storageData) {
+      this.todoList = storageData;
     }
   },
   methods: {
-    // todo를 추가하는 함수
-    addTodoItem(value: string) {
-      if (value) {
-        const newTodoObj = { completed: false, item: value };
-        localStorage.setItem(value, JSON.stringify(newTodoObj));
-        this.todoItems.push(newTodoObj);
+    addTodoItem(todo: string) {
+      if (todo) {
+        const newTodoData = {
+          id: this.todoList[this.todoList.length - 1]?.id + 1 || 1, // 마지막 요소의 id값 + 1
+          completed: false,
+          todo,
+        };
+        this.todoList.push(newTodoData);
+
+        // LocalStorage 업데이트
+        saveData(this.todoList, TODO_STORAGE_KEY);
       }
     },
-    // todo 완료 여부를 체크하는 함수
-    toggleTodoItem(todoItem: TodoItem, index: number) {
-      this.todoItems[index].completed = !this.todoItems[index].completed;
-      // localStorage 데이터를 업데이트
-      localStorage.removeItem(todoItem.item);
-      localStorage.setItem(todoItem.item, JSON.stringify(todoItem));
+    toggleTodoItem(targetId: number) {
+      this.todoList.forEach((todoItem) => {
+        if (todoItem.id === targetId) {
+          todoItem.completed = !todoItem.completed; // toggle
+
+          // animation
+          if (todoItem.completed) {
+            jsConfetti.addConfetti({
+              emojis: ["🌈", "⚡️", "💥", "✨", "💫", "🌸"],
+            });
+          }
+        }
+      });
+
+      // LocalStorage 업데이트
+      saveData(this.todoList, TODO_STORAGE_KEY);
     },
-    // todo 삭제하는 함수
-    removeTodoItem(todoItem: TodoItem, index: number) {
-      localStorage.removeItem(todoItem.item);
-      this.todoItems.splice(index, 1);
+    removeTodoItem(targetId: number) {
+      this.todoList = this.todoList.filter(
+        (todoItem) => todoItem.id !== targetId
+      );
+
+      // LocalStorage 업데이트
+      saveData(this.todoList, TODO_STORAGE_KEY);
     },
-    // 모든 todo를 삭제하는 함수
-    removeAll() {
-      localStorage.clear();
-      this.todoItems = [];
+    resetTodoList() {
+      this.todoList = [];
+
+      // LocalStorage 업데이트
+      saveData(this.todoList, TODO_STORAGE_KEY);
     },
   },
 };
@@ -75,6 +93,13 @@ export default {
 
 <style>
 body {
+  margin: 0;
+}
+
+#app {
+  position: relative;
+  min-height: 100vh;
+  padding-bottom: 50px;
   text-align: center;
   background-color: #242424;
 }

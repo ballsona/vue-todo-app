@@ -1,16 +1,13 @@
 <template>
-  <h1>Todo App with Vue</h1>
+  <header>Todo App with Vue</header>
 </template>
 
-<script lang="ts">
-export default {};
-</script>
-
 <style scoped>
-h1 {
+header {
+  position: relative;
   font-weight: 800;
   font-size: 50px;
-  margin-top: 2em;
+  padding-top: 2em;
   background: -webkit-linear-gradient(315deg, #42d392 25%, #647eff);
   background-clip: text;
   -webkit-background-clip: text;
